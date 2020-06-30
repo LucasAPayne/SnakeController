@@ -4,4 +4,4 @@ __pycache__/
 
 # Visual Studio
 .vs/
-**.pyproj.user
+*.user
