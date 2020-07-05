@@ -106,7 +106,7 @@ class App:
     ### Game States ###
     ###################
 
-    def intro(self):
+    def run(self):
         pg.display.get_surface().fill(pg.Color('black'))
         intro = True
 
@@ -119,7 +119,8 @@ class App:
                     sys.exit(0)
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_SPACE:
-                        self.loop()
+                        self.init_game()
+                        self.update()
 
             pg.display.update()
 
@@ -131,7 +132,7 @@ class App:
         while game_over:
             # 2 second delay
             if pg.time.get_ticks() > start_time + 2000:
-                self.intro()
+                self.run()
 
             self.poll_events()
 
@@ -139,20 +140,27 @@ class App:
             self.display_message(message, self.display_center)
             pg.display.update()
 
-    def loop(self):
+    def init_game(self):
         pg.display.get_surface().fill(pg.Color('white'))
 
-        #Initialize game state
         self.current_input = 0
         self.snake.initialize_pos()
         self.apple.spawn()
 
-        # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to make the snake follow it
+        # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to allow the snake to follow it
         self.graph.init_graph()
-        
         self.graph.hamiltonian_cycle(int(self.snake.x[0] + self.snake.y[0] / self.snake.side_length))
         self.generate_input_list()
 
+    def check_win_condition(self):
+        # The number of squares on the screen
+        squares = int((self.display_width / self.snake.side_length) * (self.display_height / self.snake.side_length))
+
+        # Win condition: the snake fills the entire screen
+        if self.snake.length >= squares:
+            self.end_screen('YOU WIN')
+
+    def update(self):
         while self.snake.dead is False:
             ## INPUT
             self.poll_events()
@@ -160,14 +168,8 @@ class App:
             # Set the snake's direction to the current element of the input list
             self.simulate_input()
 
-            ## UPDATE
-            # The number of squares on the screen
-            squares = int((self.display_width / self.snake.side_length) * (self.display_height / self.snake.side_length))
-
-            # Win condition: the snake fills the entire screen
-            if self.snake.length >= squares:
-                self.end_screen('YOU WIN')
-
+            ## LOGIC
+            self.check_win_condition()
             self.snake.update_position()
             self.check_collision()
 
