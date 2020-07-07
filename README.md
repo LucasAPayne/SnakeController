@@ -8,12 +8,13 @@ cycles. However, as development continues, there will be several more options fo
 - Support for manual input
 - Different methods for finding Hamiltonian cycles
 - Performance logging to compare the efficiency of the different methods
-- A loading screen to keep the program responsive while a solution is being calculated
+- A loading screen to keep the program responsive while a large solution is being calculated
 - Multithreading
 - Additional visual effects (post-processing)
 - A settings menu, complete with GUI, to manipulate several parts of the solution, including many of those listed above
 
 ### Known Issues
 - The game sometimes becomes unresponsive just as it is won.
-- The game becomes unresponsive while a solution is being calculated.
-  - Due to event polling being paused during this calculation
+  - Appears to be caused by moving the window while the main game loop is running
+- The game becomes unresponsive while a solution requiring a large graph is being calculated.
+  - Due to event polling being paused during this calculation. The loading screen to be added will alleviate this issue.
