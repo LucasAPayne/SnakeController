@@ -59,7 +59,7 @@ class App:
         if self.current_input >= len(self.graph.path) - 1:
             self.current_input = 0
 
-    def poll_events(self):
+    def poll_exit(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -113,14 +113,11 @@ class App:
         self.display_message('Press Space to Start', self.display_center)
 
         while intro:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit(0)
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_SPACE:
-                        self.init_game()
-                        self.update()
+            self.poll_exit()
+            keys = pg.key.get_pressed()
+            if keys[pg.K_SPACE]:
+                self.init_game()
+                self.update()
 
             pg.display.update()
 
@@ -134,7 +131,7 @@ class App:
             if pg.time.get_ticks() > start_time + 2000:
                 self.run()
 
-            self.poll_events()
+            self.poll_exit()
 
             pg.display.get_surface().fill(pg.Color('black'))
             self.display_message(message, self.display_center)
@@ -163,7 +160,7 @@ class App:
     def update(self):
         while self.snake.dead is False:
             ## INPUT
-            self.poll_events()
+            self.poll_exit()
 
             # Set the snake's direction to the current element of the input list
             self.simulate_input()
