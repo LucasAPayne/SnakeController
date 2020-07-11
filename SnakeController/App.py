@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+import threading
 
 from Apple import Apple
 from Graph import Graph
@@ -8,9 +9,11 @@ from Snake import Snake
 
 class App:
     def __init__(self):
-        self.display_width = 400
-        self.display_height = 400
+        self.display_width = 600
+        self.display_height = 600
         self.display_center = ((self.display_width / 2), (self.display_height / 2))
+
+        self.finished_loading = False
 
         self.input_list = []
         self.current_input = 0
@@ -121,6 +124,26 @@ class App:
 
             pg.display.update()
 
+    def load_screen(self):
+        self.finished_loading = False
+        start_time = pg.time.get_ticks()
+        dots = 0
+
+        while not self.finished_loading:
+            # Animate an ellipsis by adding a dot every second
+            if pg.time.get_ticks() > start_time + 1000:
+                dots += 1
+                start_time = pg.time.get_ticks()
+
+            if dots > 3:
+                dots = 0
+
+            pg.display.get_surface().fill(pg.Color('black'))
+            message = ('  ' * dots) + 'Loading ' + ('. ' * dots) + '    '
+            self.display_message(message, self.display_center)
+
+            pg.display.update()
+            
            
     def end_screen(self, message):
         game_over = True
@@ -144,11 +167,35 @@ class App:
         self.snake.initialize_pos()
         self.apple.spawn()
 
+        # Make one thread to display a loading screen, one to generate a cycle, and poll for events on the main thread
+        load = threading.Thread(target=self.load_screen)
+        load.start()
+
         # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to allow the snake to follow it
         self.graph.init_graph()
-        self.graph.hamiltonian_cycle(int(self.snake.x[0] + self.snake.y[0] / self.snake.side_length))
+
+        graph_start = int(self.snake.x[0] + self.snake.y[0] / self.snake.side_length)
+        cycle = threading.Thread(target=self.graph.hamiltonian_cycle, args=(graph_start,), daemon=True)
+        cycle.start()
+
+        # Keep event polling on the main thread, rather than the loading screen, to keep the window responsive
+        while cycle.is_alive():
+            # Because the loading function depends on pygame, that thread must be terminated before exiting
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.finished_loading = True
+                    load.join()
+                    pg.quit()
+                    sys.exit(0)
+
+        cycle.join()
+
+        # The input list should be generated quickly enough that the window remains responsive
         self.generate_input_list()
 
+        self.finished_loading = True
+        load.join()
+        
     def check_win_condition(self):
         # The number of squares on the screen
         squares = int((self.display_width / self.snake.side_length) * (self.display_height / self.snake.side_length))
@@ -172,7 +219,7 @@ class App:
 
             ## RENDER
             self.draw_frame()
-            pg.time.Clock().tick(6)
+            pg.time.Clock().tick(10)
             
         # If the while loop is broken, the snake is dead
         self.end_screen('YOU DIED')
