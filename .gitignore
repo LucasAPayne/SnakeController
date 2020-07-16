@@ -2,6 +2,5 @@
 __pycache__/
 *.py[cod]
 
-# Visual Studio
-.vs/
-*.user
+# Visual Studio Code
+.venv/
