@@ -24,7 +24,3 @@ Now, the project should be ready to run!
 - Performance logging to compare the efficiency of the different methods
 - Additional visual effects (post-processing)
 - A settings menu, complete with GUI, to manipulate several parts of the solution, including many of those listed above
-
-### Known Issues
-- The game sometimes becomes unresponsive just as it is won.
-  - Appears to be caused by moving the window while the main game loop is running
