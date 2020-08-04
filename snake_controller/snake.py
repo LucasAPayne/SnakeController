@@ -1,5 +1,5 @@
 import pygame as pg
-from Square import Square
+from square import Square
 
 
 class Snake(Square):

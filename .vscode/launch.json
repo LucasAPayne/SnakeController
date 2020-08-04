@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/SnakeController/SnakeController.py",
+            "program": "${workspaceFolder}/snake_controller/snake_controller.py",
             "console": "integratedTerminal"
         }
     ]

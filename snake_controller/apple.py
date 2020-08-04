@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from Square import Square
+from square import Square
 
 
 class Apple(Square):

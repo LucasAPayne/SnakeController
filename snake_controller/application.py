@@ -2,12 +2,12 @@ import pygame as pg
 import sys
 import threading
 
-from Apple import Apple
-from Graph import Graph
-from Snake import Snake
+from apple import Apple
+from graph import Graph
+from snake import Snake
 
 
-class App:
+class Application:
     def __init__(self):
         self.display_width = 600
         self.display_height = 600
