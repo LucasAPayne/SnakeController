@@ -93,10 +93,10 @@ class Application:
 
     def draw_gridlines(self):
         pg.display.get_surface().fill(pg.Color('white'))
-        squares = int(self.display_width / self.snake.side_length)
+        squares = int(self.display_width / self.snake.squares[0].side_length)
         for x in range(squares):
             for y in range(squares):
-                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (x * self.snake.side_length, y * self.snake.side_length, self.snake.side_length - 1, self.snake.side_length - 1))
+                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (x * self.snake.squares[0].side_length, y * self.snake.squares[0].side_length, self.snake.squares[0].side_length - 1, self.snake.squares[0].side_length - 1))
 
     def draw_frame(self):
         pg.display.get_surface().fill(pg.Color('black'))
@@ -174,7 +174,7 @@ class Application:
         # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to allow the snake to follow it
         self.graph.init_graph()
 
-        graph_start = int(self.snake.x[0] + self.snake.y[0] / self.snake.side_length)
+        graph_start = int(self.snake.squares[0].x + self.snake.squares[0].y / self.snake.squares[0].side_length)
         cycle = threading.Thread(target=self.graph.hamiltonian_cycle, args=(graph_start,), daemon=True)
         cycle.start()
 
@@ -198,7 +198,7 @@ class Application:
         
     def check_win_condition(self):
         # The number of squares on the screen
-        squares = int((self.display_width / self.snake.side_length) * (self.display_height / self.snake.side_length))
+        squares = int((self.display_width / self.snake.squares[0].side_length) * (self.display_height / self.snake.squares[0].side_length))
 
         # Win condition: the snake fills the entire screen
         if self.snake.length >= squares:
