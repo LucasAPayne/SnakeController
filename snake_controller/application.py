@@ -22,7 +22,7 @@ class Application:
         pg.display.set_mode((self.display_width, self.display_height))
         pg.display.set_caption("Snake Controller")
 
-        self.apple = Apple()
+        self.apple = Apple(0, 0, pg.Color('red'))
         self.graph = Graph()
         self.snake = Snake()
 

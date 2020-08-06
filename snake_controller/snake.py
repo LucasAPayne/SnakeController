@@ -2,9 +2,10 @@ import pygame as pg
 from square import Square
 
 
-class Snake(Square):
+class Snake():
 
     def __init__(self):
+        self.side_length = 100
         self.color = pg.Color('green')
         self.initialize_pos()
     

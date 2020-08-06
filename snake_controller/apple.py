@@ -4,10 +4,8 @@ from square import Square
 
 
 class Apple(Square):
-    def __init__(self):
-        self.color = pg.Color('red')
-        self.x = 0
-        self.y = 0
+    def __init__(self, x, y, color):
+        super(Apple, self).__init__(x, y, color)
         self.spawn()
 
     def spawn(self):

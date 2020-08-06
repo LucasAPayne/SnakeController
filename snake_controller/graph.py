@@ -2,11 +2,11 @@ import pygame as pg
 from square import Square
 
 
-class Graph(Square):
+class Graph():
     def __init__(self):
         display_width, display_height = pg.display.get_surface().get_size()
-        self.row_size = int(display_width / self.side_length)
-        self.column_size = int(display_height / self.side_length)
+        self.row_size = int(display_width / 100)
+        self.column_size = int(display_height / 100)
         self.graph = [[0 for x in range(self.row_size * self.row_size)] for y in range(self.row_size * self.row_size)]
         self.path = [-1 for i in range(self.row_size * self.column_size + 1)]
 
