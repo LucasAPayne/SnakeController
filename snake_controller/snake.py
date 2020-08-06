@@ -68,6 +68,5 @@ class Snake():
         self.dead = True
 
     def draw(self):
-        display = pg.display.get_surface()
         for i in range(self.length):
-            pg.draw.rect(display, self.squares[i].color, (self.squares[i].x, self.squares[i].y, self.squares[i].side_length, self.squares[i].side_length))
+            self.squares[i].draw()

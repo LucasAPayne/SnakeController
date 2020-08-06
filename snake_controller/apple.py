@@ -22,7 +22,3 @@ class Apple(Square):
 
         self.x = new_x
         self.y = new_y
-
-    def draw(self):
-        display = pg.display.get_surface()
-        pg.draw.rect(display, self.color, (self.x, self.y, self.side_length, self.side_length))
