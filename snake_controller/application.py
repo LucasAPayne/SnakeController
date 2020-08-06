@@ -2,9 +2,10 @@ import pygame as pg
 import sys
 import threading
 
-from apple import Apple
+from entities.apple import Apple
+from entities.snake import Snake
+
 from graph import Graph
-from snake import Snake
 
 
 class Application:

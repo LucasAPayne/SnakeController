@@ -1,6 +1,4 @@
 import pygame as pg
-from square import Square
-
 
 class Graph():
     def __init__(self):
