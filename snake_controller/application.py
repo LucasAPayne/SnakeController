@@ -33,34 +33,34 @@ class Application:
 
     def generate_input_list(self):
         #initialize to bogus values
-        self.input_list = [-1 for i in range(len(self.graph.path) - 1)]
+        self.input_list = [-1 for i in range(len(self.graph.cycle) - 1)]
 
         # Each element in the input list corresponds to the direction the snake should move
-        for i in range(len(self.graph.path) - 1):
+        for i in range(len(self.graph.cycle) - 1):
             # Up
             # Since the graph has a grid layout, the numbers of vertical nodes differ by the size of a row of the graph
-            if self.graph.path[i + 1] == self.graph.path[i] - self.graph.row_size:
+            if self.graph.cycle[i + 1] == self.graph.cycle[i] - self.graph.row_size:
                 self.input_list[i] = 0
 
             # Right
-            # If the next node in the path is numbered one more than the current node, the snake should move to the right
+            # If the next node in the cycle is numbered one more than the current node, the snake should move to the right
             # No need to check if the next node wraps to the next row because they are not adjacent
-            elif self.graph.path[i + 1] == self.graph.path[i] + 1:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] + 1:
                 self.input_list[i] = 1
 
             # Down
-            elif self.graph.path[i + 1] == self.graph.path[i] + self.graph.row_size:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] + self.graph.row_size:
                 self.input_list[i] = 2
 
             # Left
-            elif self.graph.path[i + 1] == self.graph.path[i] - 1:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] - 1:
                 self.input_list[i] = 3
 
     def simulate_input(self):
         self.snake.direction = self.input_list[self.current_input]
         self.current_input += 1
 
-        if self.current_input >= len(self.graph.path) - 1:
+        if self.current_input >= len(self.graph.cycle) - 1:
             self.current_input = 0
 
     def poll_exit(self):
