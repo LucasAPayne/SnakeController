@@ -1,4 +1,4 @@
 {
     "python.analysis.cacheFolderPath": "${workspaceFolder}/.venv/Scripts/python",
-    "python.autoComplete.extraPaths": ["./SnakeController"]
+    "python.autoComplete.extraPaths": ["./snake_controller"]
 }

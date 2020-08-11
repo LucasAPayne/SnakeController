@@ -2,15 +2,17 @@ import pygame as pg
 import sys
 import threading
 
-from apple import Apple
+from entities.apple  import Apple
+from entities.snake  import Snake
+from entities.square import Square
+
 from graph import Graph
-from snake import Snake
 
 
 class Application:
     def __init__(self):
-        self.display_width = 600
-        self.display_height = 600
+        self.display_width = 607
+        self.display_height = 607
         self.display_center = ((self.display_width / 2), (self.display_height / 2))
 
         self.finished_loading = False
@@ -22,7 +24,7 @@ class Application:
         pg.display.set_mode((self.display_width, self.display_height))
         pg.display.set_caption("Snake Controller")
 
-        self.apple = Apple()
+        self.apple = Apple(0, 0, pg.Color('red'))
         self.graph = Graph()
         self.snake = Snake()
 
@@ -32,34 +34,34 @@ class Application:
 
     def generate_input_list(self):
         #initialize to bogus values
-        self.input_list = [-1 for i in range(len(self.graph.path) - 1)]
+        self.input_list = [-1 for i in range(len(self.graph.cycle) - 1)]
 
         # Each element in the input list corresponds to the direction the snake should move
-        for i in range(len(self.graph.path) - 1):
+        for i in range(len(self.graph.cycle) - 1):
             # Up
             # Since the graph has a grid layout, the numbers of vertical nodes differ by the size of a row of the graph
-            if self.graph.path[i + 1] == self.graph.path[i] - self.graph.row_size:
+            if self.graph.cycle[i + 1] == self.graph.cycle[i] - self.graph.row_size:
                 self.input_list[i] = 0
 
             # Right
-            # If the next node in the path is numbered one more than the current node, the snake should move to the right
+            # If the next node in the cycle is numbered one more than the current node, the snake should move to the right
             # No need to check if the next node wraps to the next row because they are not adjacent
-            elif self.graph.path[i + 1] == self.graph.path[i] + 1:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] + 1:
                 self.input_list[i] = 1
 
             # Down
-            elif self.graph.path[i + 1] == self.graph.path[i] + self.graph.row_size:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] + self.graph.row_size:
                 self.input_list[i] = 2
 
             # Left
-            elif self.graph.path[i + 1] == self.graph.path[i] - 1:
+            elif self.graph.cycle[i + 1] == self.graph.cycle[i] - 1:
                 self.input_list[i] = 3
 
     def simulate_input(self):
         self.snake.direction = self.input_list[self.current_input]
         self.current_input += 1
 
-        if self.current_input >= len(self.graph.path) - 1:
+        if self.current_input >= len(self.graph.cycle) - 1:
             self.current_input = 0
 
     def poll_exit(self):
@@ -93,10 +95,13 @@ class Application:
 
     def draw_gridlines(self):
         pg.display.get_surface().fill(pg.Color('white'))
-        squares = int(self.display_width / self.snake.side_length)
+        cell = Square(0, 0, pg.Color('black'))
+        squares = int(self.display_width / cell.side_length)
         for x in range(squares):
             for y in range(squares):
-                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (x * self.snake.side_length, y * self.snake.side_length, self.snake.side_length - 1, self.snake.side_length - 1))
+                cell.x = x * (cell.side_length + 1) + 1
+                cell.y = y * (cell.side_length + 1) + 1
+                cell.draw()
 
     def draw_frame(self):
         pg.display.get_surface().fill(pg.Color('black'))
@@ -173,8 +178,9 @@ class Application:
 
         # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to allow the snake to follow it
         self.graph.init_graph()
-
-        graph_start = int(self.snake.x[0] + self.snake.y[0] / self.snake.side_length)
+        
+        start_node = Square(0, 0, pg.Color('black'))
+        graph_start = int(start_node.x + start_node.y / start_node.side_length)
         cycle = threading.Thread(target=self.graph.hamiltonian_cycle, args=(graph_start,), daemon=True)
         cycle.start()
 
@@ -198,7 +204,8 @@ class Application:
         
     def check_win_condition(self):
         # The number of squares on the screen
-        squares = int((self.display_width / self.snake.side_length) * (self.display_height / self.snake.side_length))
+        cell = Square(0, 0, pg.Color('black'))
+        squares = int(self.display_width / cell.side_length) * int(self.display_height / cell.side_length)
 
         # Win condition: the snake fills the entire screen
         if self.snake.length >= squares:
