@@ -2,8 +2,9 @@ import pygame as pg
 import sys
 import threading
 
-from entities.apple import Apple
-from entities.snake import Snake
+from entities.apple  import Apple
+from entities.snake  import Snake
+from entities.square import Square
 
 from graph import Graph
 
@@ -94,10 +95,13 @@ class Application:
 
     def draw_gridlines(self):
         pg.display.get_surface().fill(pg.Color('white'))
-        squares = int(self.display_width / self.snake.squares[0].side_length)
+        cell = Square(0, 0, pg.Color('black'))
+        squares = int(self.display_width / cell.side_length)
         for x in range(squares):
             for y in range(squares):
-                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (x * self.snake.squares[0].side_length, y * self.snake.squares[0].side_length, self.snake.squares[0].side_length - 1, self.snake.squares[0].side_length - 1))
+                cell.x = x * cell.side_length
+                cell.y = y * cell.side_length
+                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (cell.x, cell.y, cell.side_length - 1, cell.side_length - 1))
 
     def draw_frame(self):
         pg.display.get_surface().fill(pg.Color('black'))
@@ -174,8 +178,9 @@ class Application:
 
         # Find a Hamiltonian cycle around the screen (starting at the snake's starting position) and generate an input list to allow the snake to follow it
         self.graph.init_graph()
-
-        graph_start = int(self.snake.squares[0].x + self.snake.squares[0].y / self.snake.squares[0].side_length)
+        
+        start_node = Square(0, 0, pg.Color('black'))
+        graph_start = int(start_node.x + start_node.y / start_node.side_length)
         cycle = threading.Thread(target=self.graph.hamiltonian_cycle, args=(graph_start,), daemon=True)
         cycle.start()
 
@@ -199,7 +204,8 @@ class Application:
         
     def check_win_condition(self):
         # The number of squares on the screen
-        squares = int((self.display_width / self.snake.squares[0].side_length) * (self.display_height / self.snake.squares[0].side_length))
+        cell = Square(0, 0, pg.Color('black'))
+        squares = int((self.display_width / cell.side_length) * (self.display_height / cell.side_length))
 
         # Win condition: the snake fills the entire screen
         if self.snake.length >= squares:
