@@ -12,13 +12,13 @@ class Apple(Square):
         screen = pg.display.get_surface()
         display_width, display_height = screen.get_size()
 
-        new_x = random.randrange(0, display_width, self.side_length)
-        new_y = random.randrange(0, display_height, self.side_length)
+        new_x = random.randrange(1, display_width, self.side_length + 1)
+        new_y = random.randrange(1, display_height, self.side_length + 1)
 
         # apple should not spawn on itself or the snake
         while screen.get_at((new_x, new_y)) == pg.Color('red') or screen.get_at((new_x, new_y)) == pg.Color('green'):
-            new_x = random.randrange(0, display_width, self.side_length)
-            new_y = random.randrange(0, display_height, self.side_length)
+            new_x = random.randrange(1, display_width, self.side_length + 1)
+            new_y = random.randrange(1, display_height, self.side_length + 1)
 
         self.x = new_x
         self.y = new_y

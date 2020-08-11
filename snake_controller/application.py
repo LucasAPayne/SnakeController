@@ -11,8 +11,8 @@ from graph import Graph
 
 class Application:
     def __init__(self):
-        self.display_width = 600
-        self.display_height = 600
+        self.display_width = 607
+        self.display_height = 607
         self.display_center = ((self.display_width / 2), (self.display_height / 2))
 
         self.finished_loading = False
@@ -99,9 +99,9 @@ class Application:
         squares = int(self.display_width / cell.side_length)
         for x in range(squares):
             for y in range(squares):
-                cell.x = x * cell.side_length
-                cell.y = y * cell.side_length
-                pg.draw.rect(pg.display.get_surface(), pg.Color('black'), (cell.x, cell.y, cell.side_length - 1, cell.side_length - 1))
+                cell.x = x * (cell.side_length + 1) + 1
+                cell.y = y * (cell.side_length + 1) + 1
+                cell.draw()
 
     def draw_frame(self):
         pg.display.get_surface().fill(pg.Color('black'))
@@ -205,7 +205,7 @@ class Application:
     def check_win_condition(self):
         # The number of squares on the screen
         cell = Square(0, 0, pg.Color('black'))
-        squares = int((self.display_width / cell.side_length) * (self.display_height / cell.side_length))
+        squares = int(self.display_width / cell.side_length) * int(self.display_height / cell.side_length)
 
         # Win condition: the snake fills the entire screen
         if self.snake.length >= squares:

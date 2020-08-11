@@ -14,9 +14,9 @@ class Snake():
         self.direction = 1
         self.dead = False
 
-        self.squares.append(Square(0, 0, (pg.Color('green'))))
+        self.squares.append(Square(1, 1, (pg.Color('green'))))
         for i in range(1, self.length):
-            self.squares.append(Square(self.squares[i - 1].x - self.squares[i - 1].side_length, 0, pg.Color('green')))
+            self.squares.append(Square(self.squares[i - 1].x - self.squares[i - 1].side_length, 1, pg.Color('green')))
 
     # Push each square back and overwrite the head
     # Essentially, push each square back, add a new head, and remove the old tail
@@ -28,19 +28,19 @@ class Snake():
         # Up
         # The origin is at the top left corner of the window, so going up means the y value decreases
         if self.direction == 0:
-            self.squares[0].y -= self.squares[0].side_length
+            self.squares[0].y -= self.squares[0].side_length + 1
 
         # Right
         if self.direction == 1:
-            self.squares[0].x += self.squares[0].side_length
+            self.squares[0].x += self.squares[0].side_length + 1
 
         # Down
         if self.direction == 2:
-            self.squares[0].y += self.squares[0].side_length
+            self.squares[0].y += self.squares[0].side_length + 1
 
         # Left
         if self.direction == 3:
-            self.squares[0].x -= self.squares[0].side_length
+            self.squares[0].x -= self.squares[0].side_length + 1
 
     def collided_with_apple(self, apple):
         return self.squares[0].x == apple.x and self.squares[0].y == apple.y
